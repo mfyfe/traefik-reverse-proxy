@@ -9,17 +9,13 @@ services:
     restart: unless-stopped
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - ./config:/config/
     ports:
-      - "443:443"
+      - "80:80"
       - "8080:8080" # Web UI port
     command:
-      # Use HTTPS for all containers.
-      - --entrypoints.websecure.address=:443
-      - --entrypoints.websecure.http.tls=true
+      # Use HTTP for all containers.
+      - --entrypoints.web.address=:80
       # Enables the web UI.
       - --api.insecure=true
-      # Read config from the mounted volume.
-      - --providers.file.directory=/config/
       # Set container hostname to [service].local unless set in service config.
       - --providers.docker.defaultRule=Host(`{{ index .Labels "com.docker.compose.service" }}.local`)
